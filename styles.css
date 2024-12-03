@@ -1,0 +1,218 @@
+.easy-unsub-button {
+  background-color: rgb(220 38 38);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 16px;
+  margin-left: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  position: absolute !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 9999 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  height: 32px;
+  letter-spacing: 0.5px;
+  font-family: 'Roboto', 'Arial', sans-serif;
+  margin: 0 8px;
+  vertical-align: middle;
+  white-space: nowrap;
+  outline: none;
+  gap: 8px;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-flex !important;
+  pointer-events: auto !important;
+}
+
+.channel-page-unsub {
+  font-size: 1.4rem !important;
+  padding: 10px 20px !important;
+  height: 36px !important;
+  min-width: 120px !important;
+  margin-left: 12px !important;
+  background-color: rgb(220 38 38) !important;
+  position: static !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  transform: none !important;
+}
+
+.channel-page-unsub:hover {
+  background-color: rgb(185 28 28) !important;
+}
+
+.easy-unsub-button:hover {
+  background-color: rgb(185 28 28);
+}
+
+.easy-unsub-button:active {
+  background-color: rgb(153 27 27);
+  transform: translateY(1px);
+}
+
+/* Icon styling */
+.unsub-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin-right: 4px !important;
+}
+
+/* Add specific styles for the channel page subscribe button container */
+ytd-channel-name + ytd-subscribe-button-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Animation for hover effect */
+.easy-unsub-button,
+.channel-page-unsub {
+  transition: all 0.2s ease-in-out !important;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.easy-unsub-button:hover,
+.channel-page-unsub:hover {
+  transform: translateY(-1px) translateZ(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.easy-unsub-button:active,
+.channel-page-unsub:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* Channel exit animation */
+@keyframes channelExit {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 200px;
+    margin-bottom: 16px;
+  }
+  50% {
+    opacity: 0;
+    transform: translateX(-100%);
+    max-height: 200px;
+    margin-bottom: 16px;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+    max-height: 0;
+    margin-bottom: 0;
+  }
+}
+
+.channel-exit-animation {
+  animation: channelExit 0.5s ease-out forwards;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+/* Ensure channel containers have smooth transitions */
+ytd-channel-renderer {
+  transition: all 0.3s ease-out;
+  overflow: hidden;
+}
+
+/* Add this new style */
+ytd-subscribe-button-renderer {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+ytd-subscribe-button-renderer[subscribed] {
+  display: flex !important;
+  align-items: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Enhanced hover effects */
+.easy-unsub-button:hover,
+.channel-page-unsub:hover {
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgb(185 28 28);
+}
+
+/* Improved focus states for accessibility */
+.easy-unsub-button:focus,
+.channel-page-unsub:focus {
+  outline: 2px solid rgb(220 38 38);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
+}
+
+/* Loading state animation */
+.easy-unsub-button.loading,
+.channel-page-unsub.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.easy-unsub-button.loading::after,
+.channel-page-unsub.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Improved mobile responsiveness */
+@media (max-width: 768px) {
+  .easy-unsub-button,
+  .channel-page-unsub {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    height: 28px !important;
+    min-width: 56px !important;
+  }
+
+  .unsub-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .easy-unsub-button,
+  .channel-page-unsub {
+    background-color: rgb(239 68 68);
+  }
+  
+  .easy-unsub-button:hover,
+  .channel-page-unsub:hover {
+    background-color: rgb(220 38 38);
+  }
+}
