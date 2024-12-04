@@ -1,63 +1,48 @@
+/* Base button style */
 .easy-unsub-button {
   background-color: rgb(220 38 38);
   color: white;
   border: none;
   border-radius: 18px;
   padding: 8px 16px;
-  margin-left: 8px;
   cursor: pointer;
-  font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s;
-  position: absolute !important;
-  right: 0 !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 9999 !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 64px;
-  height: 32px;
-  letter-spacing: 0.5px;
-  font-family: 'Roboto', 'Arial', sans-serif;
-  margin: 0 8px;
-  vertical-align: middle;
-  white-space: nowrap;
-  outline: none;
-  gap: 8px;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: inline-flex !important;
-  pointer-events: auto !important;
-}
-
-.channel-page-unsub {
-  font-size: 1.4rem !important;
-  padding: 10px 20px !important;
-  height: 36px !important;
-  min-width: 120px !important;
-  margin-left: 12px !important;
-  background-color: rgb(220 38 38) !important;
-  position: static !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  vertical-align: middle !important;
-  transform: none !important;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 64px;
+  transition: all 0.2s ease-in-out !important;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
+/* Channel page specific */
+.channel-page-unsub {
+  font-size: 1.4rem !important;
+  min-width: 120px !important;
+}
+
+/* Hover, focus and active states */
+.easy-unsub-button:hover,
 .channel-page-unsub:hover {
-  background-color: rgb(185 28 28) !important;
-}
-
-.easy-unsub-button:hover {
   background-color: rgb(185 28 28);
+  transform: translateY(-2px) translateZ(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.easy-unsub-button:active {
-  background-color: rgb(153 27 27);
+.easy-unsub-button:active,
+.channel-page-unsub:active {
   transform: translateY(1px);
+  box-shadow: none;
+  background-color: rgb(153 27 27);
+}
+
+.easy-unsub-button:focus,
+.channel-page-unsub:focus {
+  outline: 2px solid rgb(220 38 38);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
 }
 
 /* Icon styling */
@@ -72,31 +57,116 @@
   margin-right: 4px !important;
 }
 
-/* Add specific styles for the channel page subscribe button container */
-ytd-channel-name + ytd-subscribe-button-renderer {
-  display: flex !important;
+/* Bulk controls container improvements */
+.bulk-controls {
+  position: sticky !important;
+  top: 80px; /* Adjusted to avoid collision with the search bar */
+  z-index: 9999 !important;
+  background: var(--yt-spec-base-background);
+  padding: 16px 24px !important;
+  display: grid !important;
+  grid-template-columns: auto auto 1fr !important;
+  gap: 16px;
   align-items: center !important;
-  gap: 8px !important;
-}
-
-/* Animation for hover effect */
-.easy-unsub-button,
-.channel-page-unsub {
-  transition: all 0.2s ease-in-out !important;
-  transform: translateZ(0);
-  will-change: transform;
-}
-
-.easy-unsub-button:hover,
-.channel-page-unsub:hover {
-  transform: translateY(-1px) translateZ(0);
+  border-bottom: 1px solid var(--yt-spec-10-percent-layer);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.easy-unsub-button:active,
-.channel-page-unsub:active {
+/* Bulk button with icon */
+.bulk-button {
+  height: 40px !important;
+  padding: 0 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  background-color: rgb(220 38 38);
+  color: white;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.bulk-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: rgb(185 28 28);
+}
+
+.bulk-button:hover {
+  background-color: rgb(185 28 28);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bulk-button:active {
   transform: translateY(1px);
-  box-shadow: none;
+}
+
+.bulk-button.active {
+  background-color: rgb(153 27 27);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: white; /* Ensure text color is white for better visibility */
+}
+
+/* Channel checkbox */
+.channel-checkbox {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid rgb(220 38 38);
+  border-radius: 4px;
+  position: relative;
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.channel-checkbox:checked {
+  background-color: rgb(220 38 38);
+  border-color: rgb(220 38 38);
+}
+
+.channel-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  left: 4px;
+  top: 0px;
+}
+
+.channel-checkbox:hover {
+  border-color: rgb(185 28 28);
+}
+
+.channel-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+  padding: 8px;
+  background: rgba(220, 38, 38, 0.05);
+  border-radius: 8px;
+}
+
+/* Progress indicator improvements */
+.bulk-progress {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(220 38 38);
+  justify-self: end !important;
+  padding: 8px 16px;
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: 20px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 /* Channel exit animation */
@@ -133,6 +203,13 @@ ytd-channel-renderer {
   overflow: hidden;
 }
 
+/* Add specific styles for the channel page subscribe button container */
+ytd-channel-name + ytd-subscribe-button-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
 /* Add this new style */
 ytd-subscribe-button-renderer {
   position: relative !important;
@@ -147,23 +224,7 @@ ytd-subscribe-button-renderer[subscribed] {
   visibility: visible !important;
 }
 
-/* Enhanced hover effects */
-.easy-unsub-button:hover,
-.channel-page-unsub:hover {
-  transform: translateY(-2px) translateZ(0);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: rgb(185 28 28);
-}
-
-/* Improved focus states for accessibility */
-.easy-unsub-button:focus,
-.channel-page-unsub:focus {
-  outline: 2px solid rgb(220 38 38);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
-}
-
-/* Loading state animation */
+/* Loading state */
 .easy-unsub-button.loading,
 .channel-page-unsub.loading {
   position: relative;
@@ -184,8 +245,36 @@ ytd-subscribe-button-renderer[subscribed] {
   margin-left: 8px;
 }
 
+/* Loading state improvements */
+.easy-unsub-button.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+  background-color: rgb(185 28 28);
+}
+
+.easy-unsub-button.loading span {
+  visibility: hidden;
+}
+
+.easy-unsub-button.loading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Improved mobile responsiveness */
@@ -204,15 +293,113 @@ ytd-subscribe-button-renderer[subscribed] {
   }
 }
 
+/* Responsive bulk button */
+@media (max-width: 768px) {
+  .bulk-button {
+    font-size: 12px;
+    padding: 8px 16px;
+    min-width: 100px;
+  }
+
+  .bulk-controls {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto !important;
+    padding: 12px 16px !important;
+    gap: 12px;
+  }
+
+  .bulk-progress {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .bulk-button {
+    height: 36px !important;
+    padding: 0 16px !important;
+    font-size: 13px;
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Additional responsive breakpoint */
+@media (max-width: 480px) {
+  .bulk-controls {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bulk-button {
+    height: 32px !important;
+  }
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .easy-unsub-button,
   .channel-page-unsub {
     background-color: rgb(239 68 68);
   }
-  
+
   .easy-unsub-button:hover,
   .channel-page-unsub:hover {
     background-color: rgb(220 38 38);
   }
+}
+
+/* Higher specificity selectors */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+
+/* Ensure bulk controls are visible */
+body[data-page-type='feed'] .bulk-controls {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Higher specificity selectors */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+
+/* Ensure bulk controls are visible */
+body[data-page-type='feed'] .bulk-controls {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Tooltip styling */
+.bulk-button[title] {
+  position: relative;
+}
+
+.bulk-button[title]::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.bulk-button:hover::after {
+  opacity: 1;
 }
