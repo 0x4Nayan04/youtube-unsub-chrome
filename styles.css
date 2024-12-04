@@ -19,8 +19,12 @@
 
 /* Channel page specific */
 .channel-page-unsub {
-  font-size: 1.4rem !important;
-  min-width: 120px !important;
+  font-size: 14px !important;
+  min-width: 80px !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  margin-left: 8px !important;
+  background-color: rgb(220 38 38) !important;
 }
 
 /* Hover, focus and active states */
@@ -57,39 +61,38 @@
   margin-right: 4px !important;
 }
 
-/* Bulk controls container improvements */
+/* Bulk controls container - positioned next to text */
 .bulk-controls {
-  position: sticky !important;
-  top: 80px; /* Adjusted to avoid collision with the search bar */
-  z-index: 9999 !important;
-  background: var(--yt-spec-base-background);
-  padding: 16px 24px !important;
-  display: grid !important;
-  grid-template-columns: auto auto 1fr !important;
-  gap: 16px;
+  position: relative !important;
+  display: inline-flex !important;
+  flex-direction: row !important;
   align-items: center !important;
-  border-bottom: 1px solid var(--yt-spec-10-percent-layer);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 16px;
+  z-index: 9999 !important;
+  background: var(--yt-spec-base-background) !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  margin-left: 24px !important;
+  margin-top: 8px !important;
 }
 
-/* Bulk button with icon */
+/* Bulk button - ensure visibility */
 .bulk-button {
-  height: 40px !important;
-  padding: 0 20px !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  border-radius: 18px !important;
+  background-color: rgb(220 38 38) !important;
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
   display: inline-flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 20px;
-  transition: all 0.2s ease;
-  background-color: rgb(220 38 38);
-  color: white;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  min-width: 120px;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-width: 100px !important;
 }
 
 .bulk-button:disabled {
@@ -156,17 +159,11 @@
   border-radius: 8px;
 }
 
-/* Progress indicator improvements */
+/* Progress indicator */
 .bulk-progress {
-  font-size: 14px;
-  font-weight: 500;
-  color: rgb(220 38 38);
-  justify-self: end !important;
-  padding: 8px 16px;
-  background: rgba(220, 38, 38, 0.1);
-  border-radius: 20px;
-  white-space: nowrap;
-  transition: all 0.2s ease;
+  font-size: 14px !important;
+  color: rgb(220 38 38) !important;
+  white-space: nowrap !important;
 }
 
 /* Channel exit animation */
@@ -291,6 +288,25 @@ ytd-subscribe-button-renderer[subscribed] {
     width: 14px;
     height: 14px;
   }
+
+  .bulk-controls {
+    margin-left: 16px !important;
+    margin-top: 16px !important;
+    width: calc(100% - 32px) !important;
+  }
+
+  .bulk-progress {
+    grid-column: 1 / -1 !important;
+    justify-self: center !important;
+    text-align: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .bulk-button {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
 }
 
 /* Responsive bulk button */
@@ -402,4 +418,21 @@ body[data-page-type='feed'] .bulk-controls {
 
 .bulk-button:hover::after {
   opacity: 1;
+}
+
+/* Ensure proper button alignment in video preview */
+ytd-subscribe-button-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Force proper button visibility */
+body ytd-subscribe-button-renderer .easy-unsub-button,
+body ytd-subscribe-button-renderer .channel-page-unsub {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  margin-left: 8px !important;
 }
