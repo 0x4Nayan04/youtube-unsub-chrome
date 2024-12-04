@@ -150,6 +150,8 @@
     button.style.display = 'inline-flex';
     button.style.visibility = 'visible';
     button.style.opacity = '1';
+    // Ensure only the bell icon is visible
+    button.querySelector('.unsub-icon').style.display = 'block';
     button.addEventListener('click', handleUnsubscribe);
     return button;
   }
@@ -320,7 +322,7 @@
           <line x1="18" y1="8" x2="23" y2="13"/>
           <line x1="23" y1="8" x2="18" y2="13"/>
         </svg>
-        Unsub Selected
+        Unsub
       </button>
       <span class="bulk-progress">Selected: 0</span>
     `;
