@@ -45,7 +45,19 @@
   };
   */
 
-  // Core functionality
+  // Add error tracking and retry mechanism
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY = 500;
+
+  // Add type checking and validation
+  function isValidButton(element) {
+    return (
+      element instanceof HTMLElement &&
+      element.matches(SELECTORS.SUBSCRIBE_BUTTON)
+    );
+  }
+
+  // Improved unsubscribe handler with better error handling
   async function handleUnsubscribe(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -53,67 +65,45 @@
     const button = event.target.closest('.easy-unsub-button');
     if (!button) return;
 
-    button.classList.add('loading');
-
-    const subscribeButton = button.closest('ytd-subscribe-button-renderer');
-    if (!subscribeButton) {
-      button.classList.remove('loading');
-      return;
-    }
-
-    const channelContainer =
-      window.location.pathname === '/feed/channels'
-        ? subscribeButton.closest('ytd-channel-renderer')
-        : null;
-
     try {
-      // Find and click the YouTube subscribe button
-      const youtubeButton = subscribeButton.querySelector(
-        '#subscribe-button button, button.yt-spec-button-shape-next, [aria-label*="Unsubscribe"]'
-      );
-      if (!youtubeButton) throw new Error('YouTube subscribe button not found');
+      button.classList.add('loading');
+      button.disabled = true; // Prevent double-clicks
 
-      // Click the button and wait for dialog
-      youtubeButton.click();
-
-      // Wait for dialog with retry
-      let confirmButton = null;
-      for (let i = 0; i < 10; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        confirmButton = Array.from(
-          document.querySelectorAll(
-            'yt-confirm-dialog-renderer button, button.yt-spec-button-shape-next'
-          )
-        ).find((btn) => btn.textContent.toLowerCase().includes('unsubscribe'));
-        if (confirmButton) break;
+      const subscribeButton = button.closest('ytd-subscribe-button-renderer');
+      if (!isValidButton(subscribeButton)) {
+        throw new Error('Invalid subscribe button element');
       }
 
-      if (!confirmButton) throw new Error('Confirmation dialog not found');
+      let retryCount = 0;
+      let success = false;
 
-      // Click confirm and wait for state change
-      confirmButton.click();
-
-      // Verify unsubscribe was successful
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const stillSubscribed =
-        subscribeButton.hasAttribute('subscribed') ||
-        subscribeButton.querySelector('[subscribed]');
-
-      if (stillSubscribed) throw new Error('Channel is still subscribed');
-
-      // Success - cleanup
-      button.classList.remove('loading');
-      cleanupButton(button);
-
-      if (channelContainer) {
-        channelContainer.classList.add('channel-exit-animation');
-        setTimeout(() => channelContainer.remove(), 500);
+      while (retryCount < MAX_RETRIES && !success) {
+        try {
+          await unsubscribeFromChannel(subscribeButton);
+          success = true;
+        } catch (error) {
+          retryCount++;
+          if (retryCount === MAX_RETRIES) throw error;
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+        }
       }
+
+      // Cleanup only after successful unsubscribe
+      handleSuccessfulUnsubscribe(button, subscribeButton);
     } catch (error) {
       console.error('Unsubscribe failed:', error);
-      button.classList.remove('loading');
-      alert('Failed to unsubscribe. Please try again.');
+      handleFailedUnsubscribe(button);
     }
+  }
+
+  // Separate unsubscribe logic for better maintainability
+  async function unsubscribeFromChannel(subscribeButton) {
+    const youtubeButton = findYoutubeButton(subscribeButton);
+    if (!youtubeButton) throw new Error('YouTube subscribe button not found');
+
+    await clickAndWaitForDialog(youtubeButton);
+    await confirmUnsubscribe();
+    await verifyUnsubscribeSuccess(subscribeButton);
   }
 
   // Optimized isSubscribed check
@@ -157,39 +147,23 @@
   }
 
   // Function to setup button observer
-  function setupButtonObserver(button, parentElement) {
-    const buttonObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' || mutation.type === 'childList') {
-          const stillSubscribed = isSubscribed(parentElement);
-          const existingButton =
-            parentElement.querySelector('.easy-unsub-button');
+  function setupButtonObserver(unsubButton, subscribeButton) {
+    if (unsubButton._observer) {
+      unsubButton._observer.disconnect();
+    }
 
-          if (stillSubscribed && !existingButton) {
-            const newUnsubButton = createUnsubButton();
-            if (window.location.pathname.includes('/@')) {
-              newUnsubButton.classList.add('channel-page-unsub');
-            }
-            parentElement.appendChild(newUnsubButton);
-            newUnsubButton.style.display = 'inline-flex';
-            newUnsubButton.style.visibility = 'visible';
-            newUnsubButton.style.opacity = '1';
-            setupButtonObserver(newUnsubButton, parentElement);
-          } else if (!stillSubscribed && existingButton) {
-            cleanupButton(existingButton);
-          }
-        }
-      });
+    const observer = new MutationObserver((mutations) => {
+      if (!document.contains(subscribeButton)) {
+        cleanupButton(unsubButton);
+      }
     });
 
-    buttonObserver.observe(parentElement, {
-      attributes: true,
-      attributeFilter: ['subscribed', 'is-subscribed'],
-      subtree: true,
+    observer.observe(document.body, {
       childList: true,
+      subtree: true,
     });
 
-    button._observer = buttonObserver;
+    unsubButton._observer = observer;
   }
 
   // Optimized button addition
