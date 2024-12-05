@@ -5,8 +5,8 @@
   let observerTimeout = null;
 
   const SELECTORS = {
-    SUBSCRIBE_BUTTON: 'ytd-subscribe-button-renderer',
-    SUBSCRIBED: '[subscribed]',
+    SUBSCRIBE_BUTTON: "ytd-subscribe-button-renderer",
+    SUBSCRIBED: "[subscribed]",
   };
 
   // Add missing debounce utility
@@ -57,29 +57,30 @@
     );
   }
 
-  // Improved unsubscribe handler with better error handling
+  // Replace the existing handleUnsubscribe function with this updated version
   async function handleUnsubscribe(event) {
     event.preventDefault();
     event.stopPropagation();
 
-    const button = event.target.closest('.easy-unsub-button');
-    if (!button) return;
+    const button = event.currentTarget;
+    if (!button || button.disabled) return;
 
     try {
-      button.classList.add('loading');
-      button.disabled = true; // Prevent double-clicks
+      button.classList.add("loading");
+      button.disabled = true;
 
-      const subscribeButton = button.closest('ytd-subscribe-button-renderer');
-      if (!isValidButton(subscribeButton)) {
-        throw new Error('Invalid subscribe button element');
-      }
+      const subscribeButton = button.closest("ytd-subscribe-button-renderer");
+      if (!subscribeButton) throw new Error("Subscribe button not found");
 
       let retryCount = 0;
       let success = false;
 
       while (retryCount < MAX_RETRIES && !success) {
         try {
-          await unsubscribeFromChannel(subscribeButton);
+          const youtubeButton = await findYoutubeButton(subscribeButton);
+          await clickAndWaitForDialog(youtubeButton);
+          await confirmUnsubscribe();
+          await verifyUnsubscribeSuccess(subscribeButton);
           success = true;
         } catch (error) {
           retryCount++;
@@ -88,30 +89,77 @@
         }
       }
 
-      // Cleanup only after successful unsubscribe
       handleSuccessfulUnsubscribe(button, subscribeButton);
     } catch (error) {
-      console.error('Unsubscribe failed:', error);
+      console.error("Unsubscribe failed:", error);
       handleFailedUnsubscribe(button);
     }
   }
 
-  // Separate unsubscribe logic for better maintainability
-  async function unsubscribeFromChannel(subscribeButton) {
-    const youtubeButton = findYoutubeButton(subscribeButton);
-    if (!youtubeButton) throw new Error('YouTube subscribe button not found');
+  // Add these helper functions after the existing utility functions
+  async function findYoutubeButton(subscribeButton) {
+    const youtubeButton = subscribeButton.querySelector(
+      '#subscribe-button button, button.yt-spec-button-shape-next, [aria-label*="Unsubscribe"]'
+    );
+    if (!youtubeButton) throw new Error("YouTube subscribe button not found");
+    return youtubeButton;
+  }
 
-    await clickAndWaitForDialog(youtubeButton);
-    await confirmUnsubscribe();
-    await verifyUnsubscribeSuccess(subscribeButton);
+  async function clickAndWaitForDialog(youtubeButton) {
+    youtubeButton.click();
+    // Wait for dialog to appear
+    for (let i = 0; i < 10; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const dialog = document.querySelector("yt-confirm-dialog-renderer");
+      if (dialog) return dialog;
+    }
+    throw new Error("Confirmation dialog not found");
+  }
+
+  async function confirmUnsubscribe() {
+    const confirmButton = Array.from(
+      document.querySelectorAll(
+        "yt-confirm-dialog-renderer button, button.yt-spec-button-shape-next"
+      )
+    ).find((btn) => btn.textContent.toLowerCase().includes("unsubscribe"));
+
+    if (!confirmButton) throw new Error("Confirm button not found");
+    confirmButton.click();
+  }
+
+  async function verifyUnsubscribeSuccess(subscribeButton) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (isSubscribed(subscribeButton)) {
+      throw new Error("Unsubscribe verification failed");
+    }
+  }
+
+  function handleSuccessfulUnsubscribe(button, subscribeButton) {
+    button.classList.remove("loading");
+    button.disabled = false;
+
+    // If we're on the channels page, animate and remove the channel
+    const channelContainer = subscribeButton.closest("ytd-channel-renderer");
+    if (channelContainer) {
+      channelContainer.classList.add("channel-exit-animation");
+      setTimeout(() => channelContainer.remove(), 500);
+    }
+  }
+
+  function handleFailedUnsubscribe(button) {
+    button.classList.remove("loading");
+    button.disabled = false;
+    // Optionally show an error state
+    button.classList.add("error");
+    setTimeout(() => button.classList.remove("error"), 2000);
   }
 
   // Optimized isSubscribed check
   function isSubscribed(button) {
     if (!button) return false;
     return (
-      button.hasAttribute('subscribed') ||
-      button.hasAttribute('is-subscribed') ||
+      button.hasAttribute("subscribed") ||
+      button.hasAttribute("is-subscribed") ||
       button.querySelector(
         "[subscribed], [is-subscribed], button[aria-label*='Unsubscribe']"
       ) !== null
@@ -120,14 +168,14 @@
 
   // Debounced URL handler
   const handleUrlChange = debounce(() => {
-    console.log('URL changed:', window.location.pathname);
+    console.log("URL changed:", window.location.pathname);
     addUnsubscribeButtons();
   }, 250);
 
   // Utility functions
   function createUnsubButton() {
-    const button = document.createElement('button');
-    button.className = 'easy-unsub-button';
+    const button = document.createElement("button");
+    button.className = "easy-unsub-button";
     button.innerHTML = `
       <svg class="unsub-icon" viewBox="0 0 24 24">
         <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -137,12 +185,12 @@
       <span>Unsub</span>
     `;
     // Force button to be visible
-    button.style.display = 'inline-flex';
-    button.style.visibility = 'visible';
-    button.style.opacity = '1';
+    button.style.display = "inline-flex";
+    button.style.visibility = "visible";
+    button.style.opacity = "1";
     // Ensure only the bell icon is visible
-    button.querySelector('.unsub-icon').style.display = 'block';
-    button.addEventListener('click', handleUnsubscribe);
+    button.querySelector(".unsub-icon").style.display = "block";
+    button.addEventListener("click", handleUnsubscribe);
     return button;
   }
 
@@ -176,19 +224,19 @@
 
       buttons.forEach((button) => {
         if (
-          !button.querySelector('.easy-unsub-button') &&
+          !button.querySelector(".easy-unsub-button") &&
           isSubscribed(button)
         ) {
           const unsubButton = createUnsubButton();
-          if (window.location.pathname.includes('/@')) {
-            unsubButton.classList.add('channel-page-unsub');
+          if (window.location.pathname.includes("/@")) {
+            unsubButton.classList.add("channel-page-unsub");
           }
           // Ensure proper insertion
           button.appendChild(unsubButton);
           // Force layout recalculation
-          unsubButton.style.display = 'inline-flex';
-          unsubButton.style.visibility = 'visible';
-          unsubButton.style.opacity = '1';
+          unsubButton.style.display = "inline-flex";
+          unsubButton.style.visibility = "visible";
+          unsubButton.style.opacity = "1";
           setupButtonObserver(unsubButton, button);
         }
       });
@@ -213,7 +261,7 @@
           const shouldUpdate = mutations.some(
             (mutation) =>
               mutation.target instanceof Element &&
-              (mutation.target.closest('ytd-subscribe-button-renderer') ||
+              (mutation.target.closest("ytd-subscribe-button-renderer") ||
                 mutation.target.matches(SELECTORS.CHANNEL_SUBSCRIBE))
           );
 
@@ -224,20 +272,20 @@
       });
 
       // Observe only necessary parts of the page
-      const observeTarget = window.location.pathname.includes('/@')
-        ? document.querySelector('#channel-container')
-        : document.querySelector('#content');
+      const observeTarget = window.location.pathname.includes("/@")
+        ? document.querySelector("#channel-container")
+        : document.querySelector("#content");
 
       if (observeTarget) {
         mainObserver.observe(observeTarget, {
           childList: true,
           subtree: true,
           attributes: true,
-          attributeFilter: ['subscribed'],
+          attributeFilter: ["subscribed"],
         });
       }
     } catch (error) {
-      console.error('Observer setup failed:', error);
+      console.error("Observer setup failed:", error);
     }
   }
 
@@ -252,7 +300,7 @@
 
   // Update progress display
   function updateProgress() {
-    const progress = document.querySelector('.bulk-progress');
+    const progress = document.querySelector(".bulk-progress");
     if (!progress) return;
 
     const text = bulkState.isProcessing
@@ -262,31 +310,31 @@
       : `Selected: ${bulkState.selected}`;
 
     // Animate the text change
-    progress.style.opacity = '0';
+    progress.style.opacity = "0";
     setTimeout(() => {
       progress.textContent = text;
-      progress.style.opacity = '1';
+      progress.style.opacity = "1";
     }, 200);
 
     // Update button state
-    const unsubBtn = document.getElementById('unsubAllBtn');
+    const unsubBtn = document.getElementById("unsubAllBtn");
     if (unsubBtn) {
       unsubBtn.disabled = bulkState.selected === 0 || bulkState.isProcessing;
-      unsubBtn.classList.toggle('processing', bulkState.isProcessing);
+      unsubBtn.classList.toggle("processing", bulkState.isProcessing);
     }
   }
 
   // Update addBulkControls function
   function addBulkControls() {
     if (
-      window.location.pathname !== '/feed/channels' ||
-      document.querySelector('.bulk-controls')
+      window.location.pathname !== "/feed/channels" ||
+      document.querySelector(".bulk-controls")
     ) {
       return;
     }
 
-    const controlsDiv = document.createElement('div');
-    controlsDiv.className = 'bulk-controls';
+    const controlsDiv = document.createElement("div");
+    controlsDiv.className = "bulk-controls";
     controlsDiv.innerHTML = `
       <button class="bulk-button" id="selectAllBtn" title="Select all channels">Select All</button>
       <button class="bulk-button" id="unsubAllBtn" title="Unsubscribe from selected channels" disabled>
@@ -301,7 +349,7 @@
       <span class="bulk-progress">Selected: 0</span>
     `;
 
-    const container = document.querySelector('ytd-browse');
+    const container = document.querySelector("ytd-browse");
     container?.insertBefore(controlsDiv, container.firstChild);
 
     // Update checkbox handling
@@ -312,25 +360,25 @@
       } else {
         bulkState.selected--;
       }
-      document.getElementById('unsubAllBtn').disabled =
+      document.getElementById("unsubAllBtn").disabled =
         bulkState.selected === 0;
       updateProgress();
     }
 
     // Add checkboxes with improved handling
     function addCheckboxesToChannels() {
-      document.querySelectorAll('ytd-channel-renderer').forEach((channel) => {
-        if (!channel.querySelector('.channel-checkbox')) {
-          const checkbox = document.createElement('div');
-          checkbox.className = 'channel-checkbox-wrapper';
+      document.querySelectorAll("ytd-channel-renderer").forEach((channel) => {
+        if (!channel.querySelector(".channel-checkbox")) {
+          const checkbox = document.createElement("div");
+          checkbox.className = "channel-checkbox-wrapper";
           checkbox.innerHTML =
             '<input type="checkbox" class="channel-checkbox">';
           channel.insertBefore(checkbox, channel.firstChild);
 
           // Add change listener
           checkbox
-            .querySelector('.channel-checkbox')
-            .addEventListener('change', handleCheckboxChange);
+            .querySelector(".channel-checkbox")
+            .addEventListener("change", handleCheckboxChange);
         }
       });
     }
@@ -338,21 +386,21 @@
     // Update bulk unsubscribe with improved state management
     async function handleBulkUnsubscribe() {
       const selectedChannels = document.querySelectorAll(
-        '.channel-checkbox:checked'
+        ".channel-checkbox:checked"
       );
       bulkState.isProcessing = true;
       bulkState.completed = 0;
       bulkState.selected = selectedChannels.length;
 
-      document.getElementById('selectAllBtn').disabled = true;
-      document.getElementById('unsubAllBtn').disabled = true;
+      document.getElementById("selectAllBtn").disabled = true;
+      document.getElementById("unsubAllBtn").disabled = true;
 
       updateProgress();
 
       for (const checkbox of selectedChannels) {
-        const channel = checkbox.closest('ytd-channel-renderer');
+        const channel = checkbox.closest("ytd-channel-renderer");
         const subscribeButton = channel.querySelector(
-          'ytd-subscribe-button-renderer'
+          "ytd-subscribe-button-renderer"
         );
 
         if (subscribeButton) {
@@ -365,7 +413,7 @@
               '#subscribe-button button, button.yt-spec-button-shape-next, [aria-label*="Unsubscribe"]'
             );
             if (!youtubeButton)
-              throw new Error('YouTube subscribe button not found');
+              throw new Error("YouTube subscribe button not found");
 
             // Click the button and wait for dialog
             youtubeButton.click();
@@ -376,10 +424,10 @@
               await new Promise((resolve) => setTimeout(resolve, 100));
               confirmButton = Array.from(
                 document.querySelectorAll(
-                  'yt-confirm-dialog-renderer button, button.yt-spec-button-shape-next'
+                  "yt-confirm-dialog-renderer button, button.yt-spec-button-shape-next"
                 )
               ).find((btn) =>
-                btn.textContent.toLowerCase().includes('unsubscribe')
+                btn.textContent.toLowerCase().includes("unsubscribe")
               );
               if (confirmButton) break;
             }
@@ -391,17 +439,17 @@
             // Verify unsubscribe was successful
             await new Promise((resolve) => setTimeout(resolve, 1000));
             const stillSubscribed =
-              subscribeButton.hasAttribute('subscribed') ||
-              subscribeButton.querySelector('[subscribed]');
+              subscribeButton.hasAttribute("subscribed") ||
+              subscribeButton.querySelector("[subscribed]");
 
-            if (stillSubscribed) throw new Error('Channel is still subscribed');
+            if (stillSubscribed) throw new Error("Channel is still subscribed");
 
             // Success - cleanup
-            channel.classList.add('channel-exit-animation');
+            channel.classList.add("channel-exit-animation");
             await new Promise((resolve) => setTimeout(resolve, 500));
             channel.remove();
           } catch (error) {
-            console.error('Unsubscribe failed:', error);
+            console.error("Unsubscribe failed:", error);
           }
         }
 
@@ -410,36 +458,36 @@
       }
 
       bulkState.isProcessing = false;
-      document.getElementById('selectAllBtn').disabled = false;
+      document.getElementById("selectAllBtn").disabled = false;
       updateProgress();
     }
 
     // Event listeners
     document
-      .getElementById('selectAllBtn')
-      ?.addEventListener('click', (event) => {
+      .getElementById("selectAllBtn")
+      ?.addEventListener("click", (event) => {
         const button = event.target;
-        const isSelecting = button.textContent === 'Select All';
-        button.textContent = isSelecting ? 'Unselect All' : 'Select All';
-        button.classList.toggle('active', isSelecting);
-        document.querySelectorAll('.channel-checkbox').forEach((cb) => {
+        const isSelecting = button.textContent === "Select All";
+        button.textContent = isSelecting ? "Unselect All" : "Select All";
+        button.classList.toggle("active", isSelecting);
+        document.querySelectorAll(".channel-checkbox").forEach((cb) => {
           cb.checked = isSelecting;
         });
         bulkState.selected = isSelecting
-          ? document.querySelectorAll('.channel-checkbox').length
+          ? document.querySelectorAll(".channel-checkbox").length
           : 0;
-        document.getElementById('unsubAllBtn').disabled =
+        document.getElementById("unsubAllBtn").disabled =
           bulkState.selected === 0;
         updateProgress();
       });
 
     document
-      .getElementById('unsubAllBtn')
-      ?.addEventListener('click', handleBulkUnsubscribe);
+      .getElementById("unsubAllBtn")
+      ?.addEventListener("click", handleBulkUnsubscribe);
 
     // Monitor for new channels
     const channelsObserver = new MutationObserver(addCheckboxesToChannels);
-    const channelsContainer = document.querySelector('ytd-browse');
+    const channelsContainer = document.querySelector("ytd-browse");
     if (channelsContainer) {
       channelsObserver.observe(channelsContainer, {
         childList: true,
@@ -456,8 +504,8 @@
     const maxAttempts = 5;
 
     function attemptInit() {
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', attemptInit);
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", attemptInit);
         return;
       }
 
@@ -469,13 +517,13 @@
         setupMainObserver();
         addUnsubscribeButtons();
 
-        if (window.location.pathname === '/feed/channels') {
+        if (window.location.pathname === "/feed/channels") {
           setTimeout(addBulkControls, 1000);
         }
 
         // Verify elements are added
         const elements = document.querySelectorAll(
-          '.easy-unsub-button, .bulk-controls'
+          ".easy-unsub-button, .bulk-controls"
         );
         if (elements.length === 0 && initAttempts < maxAttempts) {
           console.log(`Retry attempt ${initAttempts + 1} of ${maxAttempts}`);
@@ -484,7 +532,7 @@
           return;
         }
       } catch (error) {
-        console.error('Init error:', error);
+        console.error("Init error:", error);
         if (initAttempts < maxAttempts) {
           initAttempts++;
           setTimeout(attemptInit, 1000);
@@ -496,14 +544,14 @@
   }
 
   // Replace setTimeout-based execution with more robust initialization
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
 
   // Clean up on navigation
-  window.addEventListener('beforeunload', () => {
+  window.addEventListener("beforeunload", () => {
     if (mainObserver) {
       mainObserver.disconnect();
     }
