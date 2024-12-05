@@ -1,3 +1,11 @@
+body {
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  color: rgb(241, 241, 241) !important;
+}
+
 /* Base button style */
 .easy-unsub-button {
   background-color: rgb(220 38 38) !important;
@@ -16,6 +24,8 @@
   min-width: 64px !important;
   margin: 0 4px !important;
   position: static !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  color: rgb(241, 241, 241) !important;
 }
 
 /* Channel page specific */
@@ -26,6 +36,9 @@
   padding: 0 16px !important;
   margin-left: 8px !important;
   background-color: rgb(220 38 38) !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-weight: 500 !important;
+  color: rgb(241, 241, 241) !important;
 }
 
 /* Hover, focus and active states */
@@ -89,6 +102,8 @@
   align-items: center !important;
   gap: 8px !important;
   margin: 0 4px !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  color: rgb(241, 241, 241) !important;
 }
 
 .bulk-button:disabled {
@@ -166,6 +181,10 @@
   background: rgba(229, 62, 62, 0.05);
   border-radius: 8px;
   transition: all 0.2s ease;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: rgb(241, 241, 241) !important;
 }
 
 .channel-checkbox-wrapper:hover {
@@ -177,6 +196,9 @@
   font-size: 14px !important;
   color: rgb(220 38 38) !important;
   white-space: nowrap !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-weight: 500 !important;
+  color: rgb(241, 241, 241) !important;
 }
 
 /* Channel exit animation */
