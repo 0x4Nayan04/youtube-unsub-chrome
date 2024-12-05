@@ -1,5 +1,5 @@
 body {
-  font-family: "Roboto", Arial, sans-serif !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
   font-size: 14px !important;
   font-weight: 500 !important;
   line-height: 1.5 !important;
@@ -8,24 +8,27 @@ body {
 
 /* Base button style */
 .easy-unsub-button {
-  background-color: rgb(220 38 38) !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 18px !important;
-  padding: 0 16px !important;
-  height: 36px !important;
-  cursor: pointer !important;
-  font-weight: 500 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  font-size: 14px !important;
-  min-width: 64px !important;
-  margin: 0 4px !important;
-  position: static !important;
-  font-family: "Roboto", Arial, sans-serif !important;
+  height: 36px !important;
+  min-width: 80px !important;
+  padding: 0 16px !important;
+  margin: 0 0 0 8px !important;
+  background-color: rgb(220 38 38) !important;
   color: rgb(241, 241, 241) !important;
+  border: none !important;
+  border-radius: 18px !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  position: static !important;
+  z-index: 2 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
 }
 
 /* Channel page specific */
@@ -36,9 +39,24 @@ body {
   padding: 0 16px !important;
   margin-left: 8px !important;
   background-color: rgb(220 38 38) !important;
-  font-family: "Roboto", Arial, sans-serif !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
   font-weight: 500 !important;
   color: rgb(241, 241, 241) !important;
+}
+
+/* Videos tab page specific styles */
+.videos-page-unsub {
+  font-size: 14px !important;
+  min-width: 80px !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  margin-left: 8px !important;
+  background-color: rgb(220 38 38) !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-weight: 500 !important;
+  color: rgb(241, 241, 241) !important;
+  position: relative !important;
+  z-index: 2 !important;
 }
 
 /* Hover, focus and active states */
@@ -63,6 +81,18 @@ body {
   box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2);
 }
 
+/* Videos page specific hover effects */
+.videos-page-unsub:hover {
+  background-color: rgb(185 28 28) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.videos-page-unsub:active {
+  transform: translateY(1px) !important;
+  box-shadow: none !important;
+}
+
 /* Icon styling */
 .unsub-icon {
   width: 16px;
@@ -77,14 +107,13 @@ body {
 
 /* Bulk controls container - improved alignment */
 .bulk-controls {
-  display: inline-flex !important;
+  display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  margin-left: 16px !important;
-  margin-right: 16px !important;
-  position: static !important;
-  background: transparent !important;
-  padding: 0 !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  margin: 8px 16px !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 8px !important;
 }
 
 /* Bulk button - match styling */
@@ -102,7 +131,7 @@ body {
   align-items: center !important;
   gap: 8px !important;
   margin: 0 4px !important;
-  font-family: "Roboto", Arial, sans-serif !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
   color: rgb(241, 241, 241) !important;
 }
 
@@ -113,13 +142,16 @@ body {
 }
 
 .bulk-button:hover {
-  background-color: rgb(185 28 28);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: #c53030 !important; /* Darker red on hover */
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
+  transition: all 0.2s ease !important;
 }
 
 .bulk-button:active {
-  transform: translateY(1px);
+  transform: translateY(1px) !important;
+  box-shadow: none !important;
+  background-color: #9b2c2c !important;
 }
 
 .bulk-button.active {
@@ -130,10 +162,10 @@ body {
 
 /* Enhanced Channel checkbox styling */
 .channel-checkbox {
-  width: 20px;
-  height: 20px;
-  margin-right: 12px;
-  cursor: pointer;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
   appearance: none;
   -webkit-appearance: none;
   border: 2px solid #e53e3e;
@@ -151,7 +183,7 @@ body {
 }
 
 .channel-checkbox:checked::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 6px;
   top: 2px;
@@ -174,21 +206,17 @@ body {
 }
 
 .channel-checkbox-wrapper {
-  display: flex;
-  align-items: center;
-  margin-right: 16px;
-  padding: 8px;
-  background: rgba(229, 62, 62, 0.05);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  font-family: "Roboto", Arial, sans-serif !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: rgb(241, 241, 241) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 8px !important;
 }
 
-.channel-checkbox-wrapper:hover {
-  background: rgba(229, 62, 62, 0.1);
+.channel-checkbox {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
 }
 
 /* Progress indicator */
@@ -196,7 +224,7 @@ body {
   font-size: 14px !important;
   color: rgb(220 38 38) !important;
   white-space: nowrap !important;
-  font-family: "Roboto", Arial, sans-serif !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
   font-weight: 500 !important;
   color: rgb(241, 241, 241) !important;
 }
@@ -233,6 +261,18 @@ body {
 ytd-channel-renderer {
   transition: all 0.3s ease-out;
   overflow: hidden;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto auto !important;
+  gap: 16px !important;
+  align-items: center !important;
+  padding: 16px !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  gap: 16px !important;
+  align-items: center !important;
+  padding: 16px !important;
+  margin: 8px 0 !important;
+  position: relative !important;
 }
 
 /* Add specific styles for the channel page subscribe button container */
@@ -240,6 +280,9 @@ ytd-channel-name + ytd-subscribe-button-renderer {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: static !important;
 }
 
 /* Add this new style */
@@ -249,6 +292,39 @@ ytd-subscribe-button-renderer {
   align-items: center !important;
   opacity: 1 !important;
   visibility: visible !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1 !important;
+}
+
+/* Videos page subscribe button container overrides */
+ytd-video-owner-renderer ytd-subscribe-button-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: 0 !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 /* Loading state */
@@ -261,7 +337,7 @@ ytd-subscribe-button-renderer {
 
 .easy-unsub-button.loading::after,
 .channel-page-unsub.loading::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 16px;
   height: 16px;
@@ -285,7 +361,7 @@ ytd-subscribe-button-renderer {
 }
 
 .easy-unsub-button.loading::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 50%;
   top: 50%;
@@ -305,9 +381,16 @@ ytd-subscribe-button-renderer {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
 }
 
 @keyframes spin {
@@ -349,6 +432,17 @@ ytd-subscribe-button-renderer {
     width: 100% !important;
     min-width: 0 !important;
   }
+
+  .bulk-controls {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .bulk-button {
+    flex: 0 1 auto !important;
+  }
 }
 
 /* Responsive bulk button */
@@ -381,6 +475,18 @@ ytd-subscribe-button-renderer {
     min-width: 0;
     width: 100%;
   }
+
+  ytd-channel-renderer {
+    grid-template-columns: auto 1fr auto !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  .easy-unsub-button,
+  .channel-page-unsub,
+  .videos-page-unsub {
+    margin: 0 0 0 4px !important;
+  }
 }
 
 /* Additional responsive breakpoint */
@@ -391,6 +497,25 @@ ytd-subscribe-button-renderer {
 
   .bulk-button {
     height: 32px !important;
+  }
+
+  ytd-channel-renderer {
+    grid-template-columns: 40px 1fr !important;
+    grid-template-rows: auto auto !important;
+    gap: 12px !important;
+  }
+
+  ytd-channel-renderer #channel-info {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  ytd-channel-renderer ytd-subscribe-button-renderer,
+  ytd-channel-renderer .easy-unsub-button {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    justify-self: start !important;
+    margin-left: 0 !important;
   }
 }
 
@@ -418,7 +543,7 @@ body ytd-subscribe-button-renderer .easy-unsub-button {
 }
 
 /* Ensure bulk controls are visible */
-body[data-page-type="feed"] .bulk-controls {
+body[data-page-type='feed'] .bulk-controls {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -433,7 +558,7 @@ body ytd-subscribe-button-renderer .easy-unsub-button {
 }
 
 /* Ensure bulk controls are visible */
-body[data-page-type="feed"] .bulk-controls {
+body[data-page-type='feed'] .bulk-controls {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -445,23 +570,7 @@ body[data-page-type="feed"] .bulk-controls {
 }
 
 .bulk-button[title]::after {
-  content: attr(title);
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.75);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
-
-.bulk-button:hover::after {
-  opacity: 1;
+  display: none; /* Remove tooltip */
 }
 
 /* Ensure proper button alignment in video preview */
@@ -474,6 +583,22 @@ ytd-subscribe-button-renderer {
   display: flex !important;
   align-items: center !important;
   position: relative !important;
+}
+
+/* Fix subscribe button renderer alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+}
+
+/* Remove any absolute positioning */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin: 0 4px !important;
 }
 
 /* Force proper button visibility */
@@ -513,6 +638,54 @@ ytd-subscribe-button-renderer {
   opacity: 1 !important;
   visibility: visible !important;
   position: relative !important;
+}
+
+/* Fix subscribe button renderer alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+}
+
+/* Remove any absolute positioning */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin: 0 4px !important;
+}
+
+/* Fix subscribe button renderer alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+}
+
+/* Remove any absolute positioning */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin: 0 4px !important;
+}
+
+/* Fix subscribe button renderer alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+}
+
+/* Remove any absolute positioning */
+body ytd-subscribe-button-renderer .easy-unsub-button {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  margin: 0 4px !important;
 }
 
 /* Fix subscribe button renderer alignment */
@@ -759,4 +932,352 @@ ytd-channel-name,
   align-items: center !important;
   max-width: 1200px !important;
   margin: 0 auto !important;
+}
+
+/* Force visibility on videos page */
+.videos-page-unsub,
+ytd-video-owner-renderer .easy-unsub-button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  display: inline-flex !important;
+  z-index: 2 !important;
+}
+
+/* Videos page tooltip */
+.videos-page-unsub::before {
+  content: 'Unsubscribe from channel';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  margin-bottom: 8px;
+}
+
+.videos-page-unsub:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Ensure proper button alignment in dense layouts */
+ytd-video-owner-renderer ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Video page dialog styles */
+.yt-confirm-dialog-renderer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--yt-spec-base-background);
+  border-radius: 8px;
+  padding: 24px;
+  z-index: 9999;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Ensure video page button visibility */
+.videos-page-unsub {
+  position: relative !important;
+  z-index: 3 !important;
+  margin-left: 8px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Dialog animation */
+@keyframes dialogEnter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.yt-confirm-dialog-renderer {
+  animation: dialogEnter 0.2s ease-out;
+}
+
+/* Ensure proper button spacing in all contexts */
+.easy-unsub-button,
+.channel-page-unsub,
+.videos-page-unsub {
+  margin: 0 0 0 8px !important;
+}
+
+/* Unified button styles */
+.easy-unsub-button,
+.channel-page-unsub,
+.videos-page-unsub,
+.bulk-button {
+  background-color: rgb(220 38 38) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 18px !important;
+  padding: 0 16px !important;
+  height: 36px !important;
+  min-width: 80px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  position: static !important;
+  margin: 0 0 0 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 2 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Unified hover states */
+.easy-unsub-button:hover,
+.channel-page-unsub:hover,
+.videos-page-unsub:hover,
+.bulk-button:hover {
+  background-color: rgb(185 28 28) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Unified active states */
+.easy-unsub-button:active,
+.channel-page-unsub:active,
+.videos-page-unsub:active,
+.bulk-button:active {
+  transform: translateY(1px) !important;
+  box-shadow: none !important;
+  background-color: rgb(153 27 27) !important;
+}
+
+/* Channel renderer layout */
+ytd-channel-renderer {
+  display: grid !important;
+  grid-template-columns: 48px 1fr auto auto !important;
+  gap: 16px !important;
+  align-items: center !important;
+  padding: 20px !important;
+  margin: 16px 0 !important;
+  border-radius: 8px !important;
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  transition: background-color 0.2s ease !important;
+}
+
+/* Subscribe button container */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .easy-unsub-button,
+  .channel-page-unsub,
+  .videos-page-unsub,
+  .bulk-button {
+    font-size: 13px !important;
+    padding: 0 12px !important;
+    height: 32px !important;
+    min-width: 72px !important;
+  }
+
+  ytd-channel-renderer {
+    grid-template-columns: 40px 1fr auto !important;
+    gap: 12px !important;
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  ytd-channel-renderer {
+    grid-template-columns: 40px 1fr !important;
+    grid-template-rows: auto auto !important;
+  }
+
+  .easy-unsub-button,
+  .channel-page-unsub,
+  .videos-page-unsub,
+  .bulk-button {
+    width: 100% !important;
+    margin: 8px 0 0 0 !important;
+  }
+}
+
+/* Remove duplicate styles and keep only the essential ones */
+/* ...existing code for animations, loading states, and other unique features... */
+
+/* Update channel info container layout */
+ytd-video-owner-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 4px 0 !important;
+}
+
+/* Fix button container alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-left: 8px !important;
+  height: 36px !important;
+  position: relative !important;
+  top: 0 !important;
+}
+
+/* Channel text alignment */
+#channel-name.ytd-video-owner-renderer,
+#upload-info.ytd-video-owner-renderer {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 36px !important;
+}
+
+/* Button alignment fixes */
+.easy-unsub-button,
+.videos-page-unsub {
+  position: static !important;
+  transform: none !important;
+  margin-left: 8px !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Fix channel name and button alignment */
+ytd-video-owner-renderer {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 40px !important;
+  padding: 4px 0 !important;
+  margin: 0 !important;
+}
+
+/* Channel name container fixes */
+#channel-name.ytd-video-owner-renderer {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  line-height: normal !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Button container alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  height: 36px !important;
+  margin: 0 0 0 8px !important;
+  position: static !important;
+}
+
+/* Subscribe/Unsubscribe button fixes */
+.easy-unsub-button,
+.videos-page-unsub {
+  margin: 0 0 0 8px !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: static !important;
+  transform: none !important;
+  min-height: 36px !important;
+  line-height: 36px !important;
+}
+
+/* Fix vertical centering for all elements */
+ytd-video-owner-renderer,
+ytd-video-owner-renderer > *,
+ytd-subscribe-button-renderer,
+.easy-unsub-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  vertical-align: middle !important;
+}
+
+/* Channel info grid layout */
+#channel-container {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto auto !important;
+  gap: 12px !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Channel info alignment */
+#channel-info.ytd-channel-renderer {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  flex: 1 !important;
+}
+
+/* Fix button alignment and positioning */
+.easy-unsub-button {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 8px !important;
+  height: 36px !important;
+  min-width: 80px !important;
+  z-index: 2 !important;
+  transform: none !important; /* Prevent unwanted transforms */
+}
+
+/* Fix subscribe button container alignment */
+ytd-subscribe-button-renderer {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: static !important; /* Prevent positioning issues */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Fix channel renderer layout */
+ytd-channel-renderer {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto auto !important;
+  gap: 16px !important;
+  align-items: center !important;
+  padding: 16px !important;
+  margin: 8px 0 !important;
+}
+
+/* Fix video page button alignment */
+.videos-page-unsub {
+  position: static !important;
+  margin-left: 8px !important;
 }
